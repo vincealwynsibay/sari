@@ -4,7 +4,7 @@ const ejsMate = require('ejs-mate')
 const path = require('path')
 const methodOverride = require('method-override')
 
-// Mongooose
+// Mongoose
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/Sari', { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
@@ -23,17 +23,20 @@ app.set(methodOverride, '_method')
 // Routers
 const generalRoute = require('./routes/general');
 const productsRoute = require('./routes/products');
+const storesRoute = require('./routes/stores')
 const ExpressError = require('./utils/ExpressError');
 
 app.use('/', generalRoute);
+app.use('/stores', storesRoute);
 app.use('/products', productsRoute);
 
 app.all('*', (req, res, next) => {
-    throw new ExpressError('Page not Found', 404);
+    return next(new ExpressError('Page not Found', 404));
+
 })
 
 app.use((err, req, res, next) => {
-    const { statusCode } = err;
+    const { statusCode = 500 } = err;
     if (!err.message) err.message = "Something went Wrong";
     res.status(statusCode).send(err.message)
 })

@@ -17,7 +17,7 @@ const productSchema = new Schema({
     productType: {
         type: String,
         lowercase: true,
-        enum: ['food', 'utilities', 'clothes'],
+        enum: ['food', 'utility', 'clothes'],
         required: true
     },
     store_id: {
